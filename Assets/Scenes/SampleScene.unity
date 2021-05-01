@@ -283,11 +283,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f74f039eacad3444abb91d6665b88ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 2
-  columns: 2
+  rows: 10
+  columns: 10
   offset: 1
   seed: Allan
-  testValue: 11
 --- !u!4 &1736545886
 Transform:
   m_ObjectHideFlags: 0
@@ -322,7 +321,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 70a68bbb34b8e0d4e8e5dcd6dec751fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
