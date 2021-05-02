@@ -1,20 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace MarchingSaquere
+namespace MarchingSquare
 {
 
-    public static class MarchingSquareMeshGenerator
+    public class MarchingSquareMeshGenerator : IMarchingSaquereMeshGenerator
     {
-        private static int nextVertexIndex = 0;
-        private static int triangleIndex = 0;
-        private static readonly MeshVertexPool meshVertexPool = new MeshVertexPool();
+        private int nextVertexIndex = 0;
+        private int triangleIndex = 0;
+        private readonly MeshVertexPool meshVertexPool = new MeshVertexPool();
 
-        public static Mesh GenerateMesh(GridSquare grid, Matrix4x4 matrix, float offset)
+        public Mesh GenerateMesh(GridSquare grid, float offset)
         {
             Reset();
 
-            var triangles = new int[grid.GetTotalOfTriangles() * 3];
+            var triangles = new int[GetTotalOfTriangles(gridSquare: grid) * 3];
 
             for (int y = 1; y < grid.rows; y++)
             {
@@ -27,7 +27,14 @@ namespace MarchingSaquere
                             new SquareVertex(x, y - 1)
                         );
 
-                    ExtractVertices(grid, square, offset, ref nextVertexIndex, ref triangleIndex, triangles, meshVertexPool, matrix);
+                    ExtractVertices(
+                        grid: grid,
+                        square: square,
+                        offset: offset,
+                        vertexIndex: ref nextVertexIndex,
+                        triangleIndex: ref triangleIndex,
+                        triangles: triangles,
+                        meshVertexPool: meshVertexPool);
                 }
             }
 
@@ -44,25 +51,77 @@ namespace MarchingSaquere
             return mesh;
         }
 
-        private static void Reset()
+        private int GetTotalOfTriangles(GridSquare gridSquare)
+        {
+            var triangles = 0;
+            for (int y = 1; y < gridSquare.rows; y++)
+            {
+                for (int x = 0; x < gridSquare.columns - 1; x++)
+                {
+                    var square = new Square(
+                            new SquareVertex(x, y),
+                            new SquareVertex(x + 1, y),
+                            new SquareVertex(x + 1, y - 1),
+                            new SquareVertex(x, y - 1)
+                        );
+
+                    triangles += GetAmountOfTrianglesFromSquare(gridSquare, square);
+                }
+            }
+
+            return triangles;
+        }
+
+        private int GetAmountOfTrianglesFromSquare(GridSquare gridSquare, Square square) =>
+            GetAmountOfTrianglesFromSquare(gridSquare.GetSquareValue(square));
+
+        private int GetAmountOfTrianglesFromSquare(int value)
+        {
+            switch (value)
+            {
+                case 1:
+                case 2:
+                case 4:
+                case 8:
+                    return 1;
+                case 3:
+                case 6:
+                case 9:
+                case 12:
+                case 15:
+                    return 2;
+                case 7:
+                case 11:
+                case 13:
+                case 14:
+                    return 3;
+                case 5:
+                case 10:
+                    return 4;
+                default:
+                    return 0;
+            }
+        }
+
+        private void Reset()
         {
             meshVertexPool.Clear();
             nextVertexIndex = 0;
             triangleIndex = 0;
         }
 
-        private static void ExtractVertices(
+        private void ExtractVertices(
             GridSquare grid,
             Square square,
             float offset,
             ref int vertexIndex,
             ref int triangleIndex,
             int[] triangles,
-            MeshVertexPool meshVertexPool,
-            Matrix4x4 matrix)
+            MeshVertexPool meshVertexPool
+            )
         {
 
-            var meshSquare = new MeshSquare(square, offset, matrix);
+            var meshSquare = new MeshSquare(square, offset);
             var gridValue = grid.GetSquareValue(square);
 
             switch (gridValue)
@@ -116,40 +175,40 @@ namespace MarchingSaquere
 
         }
 
-        private static void Fifteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Fifteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P2, meshSquare.P3);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P3, meshSquare.P4);
         }
 
-        private static void Fourteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Fourteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P2, meshSquare.P3);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P3, meshSquare.C);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.C, meshSquare.D);
         }
 
-        private static void Thirteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Thirteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P2, meshSquare.B);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.B, meshSquare.C);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.C, meshSquare.P4);
         }
 
-        private static void Twelve(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Twelve(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P2, meshSquare.B);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.B, meshSquare.D);
         }
 
-        private static void Eleven(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Eleven(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.A, meshSquare.B);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.B, meshSquare.P3);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P3, meshSquare.P4);
         }
 
-        private static void Ten(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Ten(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.A, meshSquare.B);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.B, meshSquare.P3);
@@ -157,13 +216,13 @@ namespace MarchingSaquere
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.C, meshSquare.D);
         }
 
-        private static void Nine(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Nine(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P4, meshSquare.P1, meshSquare.C);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.A, meshSquare.C);
         }
 
-        private static void CreateTriangle(ref int vertexIndex,
+        private void CreateTriangle(ref int vertexIndex,
                                            ref int triangleIndex,
                                            int[] triangles,
                                            MeshVertexPool meshVertexPool,
@@ -178,14 +237,14 @@ namespace MarchingSaquere
             triangleIndex += 3;
         }
 
-        private static void Six(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Six(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P2, meshSquare.P3, meshSquare.A);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P3, meshSquare.C, meshSquare.A);
 
         }
 
-        private static void Five(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Five(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             Four(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.A, meshSquare.B, meshSquare.C);
@@ -193,40 +252,40 @@ namespace MarchingSaquere
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P4, meshSquare.D, meshSquare.A);
         }
 
-        private static void Seven(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Seven(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P3, meshSquare.P4, meshSquare.A);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P4, meshSquare.D, meshSquare.A);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.A, meshSquare.P2, meshSquare.P3);
         }
 
-        private static void Tree(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Tree(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P3, meshSquare.P4, meshSquare.B);
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P4, meshSquare.D, meshSquare.B);
         }
 
-        private static void Eigth(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Eigth(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.A, meshSquare.D);
         }
 
-        private static void Four(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Four(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.A, meshSquare.P2, meshSquare.B);
         }
 
-        private static void Two(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void Two(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P3, meshSquare.C, meshSquare.B);
         }
 
-        private static void One(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        private void One(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P4, meshSquare.D, meshSquare.C);
         }
 
-        private static void EvaluateMeshVertex(ref int vertexIndex, int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshVertex meshVertex)
+        private void EvaluateMeshVertex(ref int vertexIndex, int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshVertex meshVertex)
         {
             if (meshVertexPool.TryGetIndex(meshVertex, out int index))
             {

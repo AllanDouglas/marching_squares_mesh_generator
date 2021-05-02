@@ -1,4 +1,4 @@
-namespace MarchingSaquere
+namespace MarchingSquare
 {
     public struct Square
     {

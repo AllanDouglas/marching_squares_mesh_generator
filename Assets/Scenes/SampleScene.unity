@@ -287,6 +287,7 @@ MonoBehaviour:
   columns: 10
   offset: 1
   seed: Allan
+  testValue: 1
 --- !u!4 &1736545886
 Transform:
   m_ObjectHideFlags: 0

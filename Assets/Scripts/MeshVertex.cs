@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MarchingSaquere
+namespace MarchingSquare
 {
     public struct MeshVertex : IEquatable<MeshVertex>
     {

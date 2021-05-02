@@ -1,6 +1,6 @@
 using System;
 
-namespace MarchingSaquere
+namespace MarchingSquare
 {
     public class GridSquare
     {
@@ -35,58 +35,6 @@ namespace MarchingSaquere
 
             return p1 + p2 + p3 + p4;
         }
-
-        public int GetTotalOfTriangles()
-        {
-            var triangles = 0;
-            for (int y = 1; y < rows; y++)
-            {
-                for (int x = 0; x < columns - 1; x++)
-                {
-                    var square = new Square(
-                            new SquareVertex(x, y),
-                            new SquareVertex(x + 1, y),
-                            new SquareVertex(x + 1, y - 1),
-                            new SquareVertex(x, y - 1)
-                        );
-
-                    triangles += GetAmountOfTrianglesFromSquare(square);
-                }
-            }
-
-            return triangles;
-        }
-
-        public int GetAmountOfTrianglesFromSquare(Square square)
-        {
-            var value = GetSquareValue(square);
-
-            switch (value)
-            {
-                case 1:
-                case 2:
-                case 4:
-                case 8:
-                    return 1;
-                case 3:
-                case 6:
-                case 9:
-                case 12:
-                case 15:
-                    return 2;
-                case 7:
-                case 11:
-                case 13:
-                case 14:
-                    return 3;
-                case 5:
-                case 10:
-                    return 4;
-                default:
-                    return 0;
-            }
-        }
-
     }
 
 }
