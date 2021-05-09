@@ -1,9 +1,9 @@
+using MarchingSquare;
 using UnityEngine;
 
 namespace MarchingSquare
 {
-
-    public partial class MarchingSquareMeshGenerator : IMarchingSaquereMeshGenerator
+    public abstract class MarchingSquareMeshGenerator : IMarchingSaquereMeshGenerator
     {
         private int nextVertexIndex = 0;
         private int triangleIndex = 0;
@@ -50,7 +50,7 @@ namespace MarchingSquare
             return mesh;
         }
 
-        private int GetTotalOfTriangles(GridSquare gridSquare)
+        protected virtual int GetTotalOfTriangles(GridSquare gridSquare)
         {
             var triangles = 0;
             for (int y = 1; y < gridSquare.rows; y++)
@@ -71,10 +71,10 @@ namespace MarchingSquare
             return triangles;
         }
 
-        private int GetAmountOfTrianglesFromSquare(GridSquare gridSquare, Square square) =>
+        protected virtual int GetAmountOfTrianglesFromSquare(GridSquare gridSquare, Square square) =>
             GetAmountOfTrianglesFromSquare(gridSquare.GetSquareValue(square));
 
-        private int GetAmountOfTrianglesFromSquare(int value)
+        protected virtual int GetAmountOfTrianglesFromSquare(int value)
         {
             switch (value)
             {
@@ -102,14 +102,14 @@ namespace MarchingSquare
             }
         }
 
-        private void Reset()
+        protected virtual void Reset()
         {
             meshVertexPool.Clear();
             nextVertexIndex = 0;
             triangleIndex = 0;
         }
 
-        private void EvaluateVertices(
+        protected abstract void EvaluateVertices(
             GridSquare grid,
             Square square,
             float offset,
@@ -117,63 +117,8 @@ namespace MarchingSquare
             ref int triangleIndex,
             int[] triangles,
             MeshVertexPool meshVertexPool
-            )
-        {
+            );
 
-            var meshSquare = new MeshSquare(square, offset);
-            var gridValue = grid.GetSquareValue(square);
-
-            switch (gridValue)
-            {
-                case 1:
-                    MarchingSquareMeshHelper.One(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 2:
-                    MarchingSquareMeshHelper.Two(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 3:
-                    MarchingSquareMeshHelper.Tree(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 4:
-                    MarchingSquareMeshHelper.Four(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 5:
-                    MarchingSquareMeshHelper.Five(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 6:
-                    MarchingSquareMeshHelper.Six(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 7:
-                    MarchingSquareMeshHelper.Seven(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 8:
-                    MarchingSquareMeshHelper.Eigth(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 9:
-                    MarchingSquareMeshHelper.Nine(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 10:
-                    MarchingSquareMeshHelper.Ten(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 11:
-                    MarchingSquareMeshHelper.Eleven(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 12:
-                    MarchingSquareMeshHelper.Twelve(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 13:
-                    MarchingSquareMeshHelper.Thirteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 14:
-                    MarchingSquareMeshHelper.Fourteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-                case 15:
-                    MarchingSquareMeshHelper.Fifteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    break;
-            }
-
-        }
 
     }
-
 }

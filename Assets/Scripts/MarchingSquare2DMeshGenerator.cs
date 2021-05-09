@@ -2,30 +2,17 @@ using UnityEngine;
 
 namespace MarchingSquare
 {
-    public class MarchingSquare3DMeshGenerator : MarchingSquareMeshGenerator
+
+    public sealed class MarchingSquare2DMeshGenerator : MarchingSquareMeshGenerator
     {
-
-        protected override int GetAmountOfTrianglesFromSquare(int value)
-        {
-            int result = base.GetAmountOfTrianglesFromSquare(value);
-
-            if (value != 15)
-            {
-                result += 2;
-            }
-
-            return result;
-        }
-
         protected override void EvaluateVertices(
-           GridSquare grid,
-           Square square,
-           float offset,
-           ref int vertexIndex,
-           ref int triangleIndex,
-           int[] triangles,
-           MeshVertexPool meshVertexPool
-           )
+        GridSquare grid,
+        Square square,
+        float offset,
+        ref int vertexIndex,
+        ref int triangleIndex,
+        int[] triangles,
+        MeshVertexPool meshVertexPool)
         {
 
             var meshSquare = new MeshSquare(square, offset);
@@ -35,8 +22,6 @@ namespace MarchingSquare
             {
                 case 1:
                     MarchingSquareMeshHelper.One(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    
-
                     break;
                 case 2:
                     MarchingSquareMeshHelper.Two(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
@@ -84,6 +69,6 @@ namespace MarchingSquare
 
         }
 
-
     }
+
 }

@@ -16,13 +16,13 @@ namespace MarchingSquare
         [SerializeField] private int testValue = 1;
 
         GridSquare gridSquare;
-        private MarchingSquareMeshGenerator meshGenerator;
+        private IMarchingSaquereMeshGenerator meshGenerator;
         private MeshRenderer meshRenderer;
         private MeshFilter meshFilter;
 
         private void Awake()
         {
-            meshGenerator = new MarchingSquareMeshGenerator();
+            meshGenerator = new MarchingSquare2DMeshGenerator();
             meshRenderer = GetComponent<MeshRenderer>();
             meshFilter = GetComponent<MeshFilter>();
 
@@ -97,7 +97,7 @@ namespace MarchingSquare
             var oldMatrix = Gizmos.matrix;
             Gizmos.matrix = matrix;
             Gizmos.color = Color.white;
-            var mesh = new MarchingSquareMeshGenerator().GenerateMesh(gridSquare, offset);
+            var mesh = new MarchingSquare2DMeshGenerator().GenerateMesh(gridSquare, offset);
             Gizmos.DrawMesh(mesh);
             Gizmos.matrix = oldMatrix;
         }

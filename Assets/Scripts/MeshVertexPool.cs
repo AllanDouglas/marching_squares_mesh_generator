@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MarchingSquare
 {
-    internal class MeshVertexPool
+    public sealed class MeshVertexPool
     {
         private readonly Dictionary<MeshVertex, int> pool = new Dictionary<MeshVertex, int>();
         public int Size => pool.Count;
