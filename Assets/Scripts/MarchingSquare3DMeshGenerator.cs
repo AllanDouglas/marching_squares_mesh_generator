@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace MarchingSquare
 {
     public class MarchingSquare3DMeshGenerator : MarchingSquareMeshGenerator
@@ -35,8 +33,6 @@ namespace MarchingSquare
             {
                 case 1:
                     MarchingSquareMeshHelper.One(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
-                    
-
                     break;
                 case 2:
                     MarchingSquareMeshHelper.Two(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
@@ -84,6 +80,18 @@ namespace MarchingSquare
 
         }
 
+        private bool IsOnEdge(SquareVertex squareVertex, GridSquare grid)
+        {
+            var neighbors = grid.GetNeighbors(squareVertex);
+
+            for (int i = 0; i < neighbors.Count; i++)
+            {
+                if(neighbors[i].value ==0)
+                    return true;
+            }
+            
+            return false;
+        }
 
     }
 }

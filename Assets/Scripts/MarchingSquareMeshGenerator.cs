@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MarchingSquare
 {
-    public abstract class MarchingSquareMeshGenerator : IMarchingSaquereMeshGenerator
+    public abstract class MarchingSquareMeshGenerator : IMarchingSquareMeshGenerator
     {
         private int nextVertexIndex = 0;
         private int triangleIndex = 0;

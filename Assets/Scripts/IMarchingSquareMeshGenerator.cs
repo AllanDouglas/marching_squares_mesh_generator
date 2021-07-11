@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MarchingSquare
 {
-    public interface IMarchingSaquereMeshGenerator
+    public interface IMarchingSquareMeshGenerator
     {
         Mesh GenerateMesh(GridSquare grid, float offset);
     }

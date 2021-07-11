@@ -16,13 +16,13 @@ namespace MarchingSquare
         [SerializeField] private int testValue = 1;
 
         GridSquare gridSquare;
-        private IMarchingSaquereMeshGenerator meshGenerator;
+        private IMarchingSquareMeshGenerator meshGenerator;
         private MeshRenderer meshRenderer;
         private MeshFilter meshFilter;
 
         private void Awake()
         {
-            meshGenerator = new MarchingSquare2DMeshGenerator();
+            meshGenerator = new MarchingSquare3DMeshGenerator();
             meshRenderer = GetComponent<MeshRenderer>();
             meshFilter = GetComponent<MeshFilter>();
 
@@ -41,11 +41,11 @@ namespace MarchingSquare
 
                     if (x == 0 || x == columns - 1 || y == 0 || y == rows - 1)
                     {
-                        gridSquare.SetVeterxValue(new SquareVertex(x, y), 1);
+                        gridSquare.SetVertexValue(new SquareVertex(x, y), 1);
                         continue;
                     }
 
-                    gridSquare.SetVeterxValue(new SquareVertex(x, y), Random.value > .5f ? 1 : 0);
+                    gridSquare.SetVertexValue(new SquareVertex(x, y), Random.value > .5f ? 1 : 0);
                 }
             }
         }
@@ -81,10 +81,10 @@ namespace MarchingSquare
         {
             gridSquare = new GridSquare(2, 2);
 
-            gridSquare.SetVeterxValue(new SquareVertex(0, 1), ((testValue & 0b1000) >> 3) == 1 ? 1 : 0); // 1
-            gridSquare.SetVeterxValue(new SquareVertex(1, 1), ((testValue & 0b0100) >> 2) == 1 ? 1 : 0); // 2
-            gridSquare.SetVeterxValue(new SquareVertex(1, 0), ((testValue & 0b0010) >> 1) == 1 ? 1 : 0); // 3
-            gridSquare.SetVeterxValue(new SquareVertex(0, 0), (testValue & 0b0001) == 1 ? 1 : 0);        // 4
+            gridSquare.SetVertexValue(new SquareVertex(0, 1), ((testValue & 0b1000) >> 3) == 1 ? 1 : 0); // 1
+            gridSquare.SetVertexValue(new SquareVertex(1, 1), ((testValue & 0b0100) >> 2) == 1 ? 1 : 0); // 2
+            gridSquare.SetVertexValue(new SquareVertex(1, 0), ((testValue & 0b0010) >> 1) == 1 ? 1 : 0); // 3
+            gridSquare.SetVertexValue(new SquareVertex(0, 0), (testValue & 0b0001) == 1 ? 1 : 0);        // 4
 
             var matrix = Matrix4x4.Translate(transform.localPosition);
 
