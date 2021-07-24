@@ -4,15 +4,15 @@ namespace MarchingSquare
 {
     public struct CrossNeighbors<T>
     {
-        public readonly T p1, p2, p3, p4;
+        public readonly T left, top, right, bottom;
         public readonly int Count;
 
-        public CrossNeighbors(T p1, T p2, T p3, T p4)
+        public CrossNeighbors(T left, T top, T right, T down)
         {
-            this.p1 = p1;
-            this.p2 = p2;
-            this.p3 = p3;
-            this.p4 = p4;
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = down;
             Count = 4;
         }
 
@@ -23,13 +23,13 @@ namespace MarchingSquare
             switch (index)
             {
                 case 0:
-                    return p1;
+                    return left;
                 case 1:
-                    return p2;
+                    return top;
                 case 2:
-                    return p3;
+                    return right;
                 case 3:
-                    return p4;
+                    return bottom;
                 default:
                     throw new IndexOutOfRangeException();
             }

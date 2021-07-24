@@ -4,6 +4,13 @@ namespace MarchingSquare
 {
     public class GridSquare
     {
+        private static readonly Square Invalid = new Square(
+            new SquareVertex(-1, -1),
+            new SquareVertex(-1, -1),
+            new SquareVertex(-1, -1),
+            new SquareVertex(-1, -1)
+        );
+
         public readonly int rows;
         public readonly int columns;
         private readonly int[] vertices;
@@ -47,28 +54,28 @@ namespace MarchingSquare
 
         internal CrossNeighbors<Neighbor<Square>> GetNeighbors(Square center)
         {
-            var leftSquare = Square.BuildSquare(
+            var leftSquare = BuildValidSquare(
                 leftTop: new SquareVertex(center.LeftTop.x - 1, center.LeftTop.y),
                 rightTop: center.LeftTop,
                 rightDown: center.LeftDown,
                 leftDown: new SquareVertex(center.LeftDown.x - 1, center.LeftDown.y)
             );
 
-            var topSquare = Square.BuildSquare(
+            var topSquare = BuildValidSquare(
                 leftTop: new SquareVertex(center.LeftTop.x, center.LeftTop.y + 1),
                 rightTop: new SquareVertex(center.RightTop.x, center.RightTop.y + 1),
                 rightDown: center.RightTop,
                 leftDown: center.LeftTop
             );
 
-            var rightSquare = Square.BuildSquare(
+            var rightSquare = BuildValidSquare(
                 leftTop: new SquareVertex(center.RightTop.x + 1, center.RightTop.y),
                 rightTop: center.RightTop,
                 rightDown: center.RightDown,
                 leftDown: new SquareVertex(center.RightDown.x + 1, center.RightDown.y)
             );
 
-            var downSquare = Square.BuildSquare(
+            var downSquare = BuildValidSquare(
                 leftTop: center.LeftDown,
                 rightTop: center.RightDown,
                 rightDown: new SquareVertex(center.RightDown.x, center.RightDown.y - 1),
@@ -97,6 +104,29 @@ namespace MarchingSquare
                  new Neighbor<SquareVertex>(down, GetVertexValue(down))
              );
         }
+
+        private Square BuildValidSquare(SquareVertex leftTop, SquareVertex rightTop, SquareVertex rightDown, SquareVertex leftDown)
+        {
+            if (leftTop.x < 0 || rightTop.x < 0 || rightDown.x < 0 || leftDown.x < 0 || leftTop.y < 0 || rightTop.y < 0 || rightDown.y < 0 || leftDown.y < 0)
+            {
+                return Invalid;
+            }
+
+            if (leftTop.x >= this.columns || rightTop.x >= this.columns || rightDown.x >= this.columns || leftDown.x >= this.columns)
+            {
+                return Invalid;
+            }
+
+            if (leftTop.y >= this.rows || rightTop.y >= this.rows || rightDown.y >= this.rows || leftDown.y >= this.rows)
+            {
+                return Invalid;
+            }
+
+            return Square.BuildSquare(leftTop: leftTop, rightTop: rightTop, rightDown: rightDown, leftDown: leftDown);
+
+
+        }
+
     }
 
 }
