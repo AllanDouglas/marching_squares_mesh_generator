@@ -13,6 +13,7 @@ namespace MarchingSquare
         [SerializeField] private float offset = 1;
 
         [SerializeField] private string seed;
+        [Range(1, 15)]
         [SerializeField] private int testValue = 1;
 
         GridSquare gridSquare;
@@ -88,8 +89,8 @@ namespace MarchingSquare
 
             var matrix = Matrix4x4.Translate(transform.localPosition);
 
-            DrawPoints(matrix);
             DrawMesh(matrix);
+            DrawPoints(matrix);
         }
 
         private void DrawMesh(Matrix4x4 matrix)
@@ -97,7 +98,7 @@ namespace MarchingSquare
             var oldMatrix = Gizmos.matrix;
             Gizmos.matrix = matrix;
             Gizmos.color = Color.white;
-            var mesh = new MarchingSquare2DMeshGenerator().GenerateMesh(gridSquare, offset);
+            var mesh = new MarchingSquare3DMeshGenerator().GenerateMesh(gridSquare, offset);
             Gizmos.DrawMesh(mesh);
             Gizmos.matrix = oldMatrix;
         }

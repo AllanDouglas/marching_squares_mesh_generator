@@ -28,10 +28,11 @@ namespace MarchingSquare
             P4 = p4;
         }
 
-        public MeshVertex A => new MeshVertex(P1.position + Vector3.right * (offset * .5f));
-        public MeshVertex B => new MeshVertex(P2.position + Vector3.back * (offset * .5f));
-        public MeshVertex C => new MeshVertex(P3.position + Vector3.left * (offset * .5f));
-        public MeshVertex D => new MeshVertex(P4.position + Vector3.forward * (offset * .5f));
+        public MeshVertex A => new MeshVertex(P1.position + Dir(in P2, in P1) * (offset * .5f));
+        public MeshVertex B => new MeshVertex(P2.position + Dir(in P3, in P2) * (offset * .5f));
+        public MeshVertex C => new MeshVertex(P3.position + Dir(in P4, in P3) * (offset * .5f));
+        public MeshVertex D => new MeshVertex(P4.position + Dir(in P1, in P4) * (offset * .5f));
+        private Vector3 Dir(in MeshVertex from, in MeshVertex to) => (from.position - to.position).normalized;
 
     }
 

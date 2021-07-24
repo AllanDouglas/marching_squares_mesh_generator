@@ -1,15 +1,17 @@
 namespace MarchingSquare
 {
-    public struct Neighbor
+    public struct Neighbor<T>
     {
-        public readonly SquareVertex vertex;
+        public readonly T vertex;
         public readonly int value;
 
-        public Neighbor(SquareVertex vertex, int value)
+        public Neighbor(T vertex, int value)
         {
             this.vertex = vertex;
             this.value = value;
         }
+
+        public override string ToString() => $"{vertex}: {value}";
     }
 
 }

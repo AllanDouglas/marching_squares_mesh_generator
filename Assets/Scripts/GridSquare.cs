@@ -45,18 +45,56 @@ namespace MarchingSquare
             return p1 + p2 + p3 + p4;
         }
 
-        internal Neighbors GetNeighbors(SquareVertex squareVertex)
+        internal CrossNeighbors<Neighbor<Square>> GetNeighbors(Square center)
+        {
+            var leftSquare = Square.BuildSquare(
+                leftTop: new SquareVertex(center.LeftTop.x - 1, center.LeftTop.y),
+                rightTop: center.LeftTop,
+                rightDown: center.LeftDown,
+                leftDown: new SquareVertex(center.LeftDown.x - 1, center.LeftDown.y)
+            );
+
+            var topSquare = Square.BuildSquare(
+                leftTop: new SquareVertex(center.LeftTop.x, center.LeftTop.y + 1),
+                rightTop: new SquareVertex(center.RightTop.x, center.RightTop.y + 1),
+                rightDown: center.RightTop,
+                leftDown: center.LeftTop
+            );
+
+            var rightSquare = Square.BuildSquare(
+                leftTop: new SquareVertex(center.RightTop.x + 1, center.RightTop.y),
+                rightTop: center.RightTop,
+                rightDown: center.RightDown,
+                leftDown: new SquareVertex(center.RightDown.x + 1, center.RightDown.y)
+            );
+
+            var downSquare = Square.BuildSquare(
+                leftTop: center.LeftDown,
+                rightTop: center.RightDown,
+                rightDown: new SquareVertex(center.RightDown.x, center.RightDown.y - 1),
+                leftDown: new SquareVertex(center.LeftDown.x, center.LeftDown.y - 1)
+            );
+
+            return new CrossNeighbors<Neighbor<Square>>(
+                new Neighbor<Square>(leftSquare, GetSquareValue(leftSquare)),
+                new Neighbor<Square>(topSquare, GetSquareValue(topSquare)),
+                new Neighbor<Square>(rightSquare, GetSquareValue(rightSquare)),
+                new Neighbor<Square>(downSquare, GetSquareValue(downSquare))
+            );
+        }
+
+        internal CrossNeighbors<Neighbor<SquareVertex>> GetNeighbors(SquareVertex squareVertex)
         {
             var left = new SquareVertex(squareVertex.x - 1, squareVertex.y);
             var top = new SquareVertex(squareVertex.x, squareVertex.y + 1);
             var right = new SquareVertex(squareVertex.x + 1, squareVertex.y);
             var down = new SquareVertex(squareVertex.x, squareVertex.y - 1);
 
-            return new Neighbors(
-                 new Neighbor(left, GetVertexValue(left)),
-                 new Neighbor(top, GetVertexValue(top)),
-                 new Neighbor(right, GetVertexValue(right)),
-                 new Neighbor(down, GetVertexValue(down))
+            return new CrossNeighbors<Neighbor<SquareVertex>>(
+                 new Neighbor<SquareVertex>(left, GetVertexValue(left)),
+                 new Neighbor<SquareVertex>(top, GetVertexValue(top)),
+                 new Neighbor<SquareVertex>(right, GetVertexValue(right)),
+                 new Neighbor<SquareVertex>(down, GetVertexValue(down))
              );
         }
     }

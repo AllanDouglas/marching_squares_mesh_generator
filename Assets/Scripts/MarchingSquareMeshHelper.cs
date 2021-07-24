@@ -3,6 +3,58 @@ namespace MarchingSquare
 
     internal static class MarchingSquareMeshHelper
     {
+
+        internal static void DrawFace(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare, in int gridValue)
+        {
+            switch (gridValue)
+            {
+                case 1:
+                    One(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 2:
+                    Two(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 3:
+                    Tree(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 4:
+                    Four(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 5:
+                    Five(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 6:
+                    Six(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 7:
+                    Seven(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 8:
+                    Eight(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 9:
+                    Nine(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 10:
+                    Ten(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 11:
+                    Eleven(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 12:
+                    Twelve(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 13:
+                    Thirteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 14:
+                    Fourteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+                case 15:
+                    Fifteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    break;
+            }
+        }
         internal static void Fifteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.P2, meshSquare.P3);
@@ -78,7 +130,7 @@ namespace MarchingSquare
             MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P4, meshSquare.D, meshSquare.B);
         }
 
-        internal static void Eigth(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
+        internal static void Eight(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare)
         {
             MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare.P1, meshSquare.A, meshSquare.D);
         }

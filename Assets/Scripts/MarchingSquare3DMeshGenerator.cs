@@ -3,13 +3,40 @@ namespace MarchingSquare
     public class MarchingSquare3DMeshGenerator : MarchingSquareMeshGenerator
     {
 
-        protected override int GetAmountOfTrianglesFromSquare(int value)
+        protected override int GetAmountOfTrianglesFromSquare(GridSquare gridSquare, Square square)
         {
-            int result = base.GetAmountOfTrianglesFromSquare(value);
+            return base.GetAmountOfTrianglesFromSquare(gridSquare, square);
+        }
 
-            if (value != 15)
+        protected override int GetAmountOfTrianglesFromSquareValue(int value)
+        {
+            int result = base.GetAmountOfTrianglesFromSquareValue(value);
+
+            switch (value)
             {
-                result += 2;
+                case 1:
+                case 2:
+                case 4:
+                case 8:
+                    result += 6;
+                    break;
+                case 5:
+                case 10:
+                    result += 12;
+                    break;
+                case 7:
+                case 11:
+                case 13:
+                case 14:
+                    result += 10;
+                    break;
+                case 3:
+                case 6:
+                case 9:
+                case 12:
+                case 15:
+                    result += 8;
+                    break;
             }
 
             return result;
@@ -22,75 +49,244 @@ namespace MarchingSquare
            ref int vertexIndex,
            ref int triangleIndex,
            int[] triangles,
-           MeshVertexPool meshVertexPool
+           MeshVertexPool vertexPool
            )
         {
+            var cube = new MeshCube(square, offset);
+            var meshSquare = cube.Up;
+            var value = grid.GetSquareValue(square);
 
-            var meshSquare = new MeshSquare(square, offset);
-            var gridValue = grid.GetSquareValue(square);
-
-            switch (gridValue)
+            switch (value)
             {
                 case 1:
-                    MarchingSquareMeshHelper.One(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    One(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 2:
-                    MarchingSquareMeshHelper.Two(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Two(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 3:
-                    MarchingSquareMeshHelper.Tree(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Three(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 4:
-                    MarchingSquareMeshHelper.Four(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Four(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 5:
-                    MarchingSquareMeshHelper.Five(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Five(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 6:
-                    MarchingSquareMeshHelper.Six(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Six(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 7:
-                    MarchingSquareMeshHelper.Seven(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Seven(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 8:
-                    MarchingSquareMeshHelper.Eigth(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Eight(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 9:
-                    MarchingSquareMeshHelper.Nine(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Nine(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 10:
-                    MarchingSquareMeshHelper.Ten(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Ten(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 11:
-                    MarchingSquareMeshHelper.Eleven(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Eleven(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 12:
-                    MarchingSquareMeshHelper.Twelve(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Twelve(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 13:
-                    MarchingSquareMeshHelper.Thirteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Thirteen(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 14:
-                    MarchingSquareMeshHelper.Fourteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Fourteen(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
                     break;
                 case 15:
-                    MarchingSquareMeshHelper.Fifteen(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare);
+                    Fifteen(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube, meshSquare, value);
+                    break;
+                default:
+                    DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
                     break;
             }
 
         }
 
-        private bool IsOnEdge(SquareVertex squareVertex, GridSquare grid)
+        private static void Fourteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 9);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.C, cube.Front.C, cube.Left.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left.C, cube.Up.D, cube.Up.C);
+        }
+
+        private static void Thirteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front.C, cube.Front.A, cube.Right.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right.A, cube.Right.C, cube.Front.C);
+        }
+
+        private static void Twelve(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.D, cube.Up.B, cube.Right.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.D, cube.Right.C, cube.Left.C);
+        }
+
+        private static void Eleven(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 9);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.A, cube.Back.C, cube.Up.B);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Right.C, cube.Up.B);
+        }
+
+        private static void Ten(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 9);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.C, cube.Front.C, cube.Left.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left.C, cube.Up.D, cube.Up.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.A, cube.Back.C, cube.Up.B);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Right.C, cube.Up.B);
+        }
+
+        private static void Fifteen(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 15);
+        }
+
+        private static void Nine(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front.C, cube.Up.C, cube.Up.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.A, cube.Back.C, cube.Front.C);
+        }
+
+        private static void Six(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 9);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front.C, cube.Back.C, cube.Up.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Up.A, cube.Up.C, cube.Front.C);
+        }
+
+        private static void Five(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 9);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Left.A, cube.Left.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Back.A, cube.Left.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front.C, cube.Front.A, cube.Right.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right.A, cube.Right.C, cube.Front.C);
+        }
+
+        private static void Eight(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Left.C, cube.Left.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left.A, cube.Back.A, cube.Back.C);
+        }
+
+        private static void Seven(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube, MeshSquare meshSquare, int value)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, meshSquare, value);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Right, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Front, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left, 6);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back, 9);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Left.A, cube.Left.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Back.A, cube.Left.A);
+        }
+
+        private static void DrawD_A(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool vertexPool, MeshCube cube)
+        {
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Back.C, cube.Left.C, cube.Left.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, vertexPool, cube.Left.A, cube.Back.A, cube.Back.C);
+        }
+
+        private static void Four(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshCube cubeMesh, MeshSquare meshSquare, int gridValue)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare, gridValue);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Back, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Right, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Back.C, cubeMesh.Back.A, cubeMesh.Right.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Back.C, cubeMesh.Right.A, cubeMesh.Right.C);
+        }
+
+        private static void Three(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshCube cubeMesh, MeshSquare meshSquare, int gridValue)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare, gridValue);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front, 15);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Right, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Left, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Right.C, cubeMesh.Right.A, cubeMesh.Left.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Right.C, cubeMesh.Left.A, cubeMesh.Left.C);
+        }
+
+        private static void Two(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshCube cubeMesh, MeshSquare meshSquare, int gridValue)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare, gridValue);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Right, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front.C, cubeMesh.Right.A, cubeMesh.Front.A);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front.C, cubeMesh.Right.C, cubeMesh.Right.A);
+        }
+
+        private static void One(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshCube cubeMesh, MeshSquare meshSquare, int gridValue)
+        {
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare, in gridValue);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front, 9);
+            DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Left, 6);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front.A, cubeMesh.Left.A, cubeMesh.Front.C);
+            MeshHelper.CreateTriangle(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, cubeMesh.Front.C, cubeMesh.Left.A, cubeMesh.Left.C);
+        }
+
+        private static void DrawFace(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare, in int gridValue)
+        {
+            MarchingSquareMeshHelper.DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare, in gridValue);
+        }
+
+        private int GetAmountOfEdges(SquareVertex squareVertex, GridSquare grid)
         {
             var neighbors = grid.GetNeighbors(squareVertex);
-
+            var edges = 0;
             for (int i = 0; i < neighbors.Count; i++)
             {
-                if(neighbors[i].value ==0)
-                    return true;
+                if (neighbors[i].value == 0)
+                    edges++;
             }
-            
-            return false;
+
+            return edges;
         }
 
     }

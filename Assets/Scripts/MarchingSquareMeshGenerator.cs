@@ -72,9 +72,9 @@ namespace MarchingSquare
         }
 
         protected virtual int GetAmountOfTrianglesFromSquare(GridSquare gridSquare, Square square) =>
-            GetAmountOfTrianglesFromSquare(gridSquare.GetSquareValue(square));
+            GetAmountOfTrianglesFromSquareValue(gridSquare.GetSquareValue(square));
 
-        protected virtual int GetAmountOfTrianglesFromSquare(int value)
+        protected virtual int GetAmountOfTrianglesFromSquareValue(int value)
         {
             switch (value)
             {

@@ -10,6 +10,8 @@ namespace MarchingSquare
             this.x = x;
             this.y = y;
         }
+
+        public override string ToString() => $"{nameof(SquareVertex)} ({x},{y})";
     }
 
 }

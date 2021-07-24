@@ -2,12 +2,12 @@ using System;
 
 namespace MarchingSquare
 {
-    public struct Neighbors
+    public struct CrossNeighbors<T>
     {
-        public readonly Neighbor p1, p2, p3, p4;
+        public readonly T p1, p2, p3, p4;
         public readonly int Count;
 
-        public Neighbors(Neighbor p1, Neighbor p2, Neighbor p3, Neighbor p4)
+        public CrossNeighbors(T p1, T p2, T p3, T p4)
         {
             this.p1 = p1;
             this.p2 = p2;
@@ -16,9 +16,9 @@ namespace MarchingSquare
             Count = 4;
         }
 
-        public Neighbor this[int index] => Get(index);
+        public T this[int index] => Get(index);
 
-        public Neighbor Get(int index)
+        public T Get(int index)
         {
             switch (index)
             {
