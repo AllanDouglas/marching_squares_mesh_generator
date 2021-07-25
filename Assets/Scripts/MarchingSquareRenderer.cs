@@ -11,12 +11,7 @@ namespace MarchingSquare
         [SerializeField] private int rows;
         [SerializeField] private int columns;
         [SerializeField] private float offset = 1;
-
         [SerializeField] private string seed;
-        [Range(1, 15)]
-        [SerializeField] private int testValue = 1;
-        [SerializeField] private string binaryRepresentation;
-
         GridSquare gridSquare;
         private IMarchingSquareMeshGenerator meshGenerator;
         private MeshRenderer meshRenderer;
@@ -66,7 +61,6 @@ namespace MarchingSquare
 
         private void LoadMesh()
         {
-            var matrix = Matrix4x4.Translate(Vector3.zero);
             meshFilter.mesh = meshGenerator.GenerateMesh(gridSquare, offset);
         }
 
@@ -81,31 +75,10 @@ namespace MarchingSquare
 
 #if UNITY_EDITOR
 
-        [ExecuteInEditMode]
-        private void OnValidate()
-        {
-            binaryRepresentation = System.Convert.ToString(testValue, 2);
-        }
-
         private void OnDrawGizmos()
         {
-            gridSquare = new GridSquare(3, 3);
-
-            var numbers = new[] { 1, 1, 0, 1, 0, 0, 0, 0, 0 };
-            var index = 0;
-            for (int y = 0; y < gridSquare.rows; y++)
-            {
-                for (int x = 0; x < gridSquare.columns; x++)
-                {
-                    gridSquare.SetVertexValue(new SquareVertex(x, y), numbers[index]);
-                    index++;
-                }
-            }
-
-            // gridSquare.SetVertexValue(new SquareVertex(0, 1), ((testValue & 0b1000) >> 3) == 1 ? 1 : 0); // 1
-            // gridSquare.SetVertexValue(new SquareVertex(1, 1), ((testValue & 0b0100) >> 2) == 1 ? 1 : 0); // 2
-            // gridSquare.SetVertexValue(new SquareVertex(1, 0), ((testValue & 0b0010) >> 1) == 1 ? 1 : 0); // 3
-            // gridSquare.SetVertexValue(new SquareVertex(0, 0), (testValue & 0b0001) == 1 ? 1 : 0);        // 4
+            Random.InitState(seed.GetHashCode());
+            LoadGrid();
 
             var matrix = Matrix4x4.Translate(transform.localPosition);
 

@@ -1,3 +1,5 @@
+using YamlDotNet.Core.Tokens;
+
 namespace MarchingSquare
 {
     public struct Neighbor<T>
@@ -12,6 +14,7 @@ namespace MarchingSquare
         }
 
         public override string ToString() => $"{vertex}: {value}";
+    
     }
 
 }

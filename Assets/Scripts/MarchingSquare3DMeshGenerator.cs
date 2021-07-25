@@ -287,26 +287,42 @@ namespace MarchingSquare
                 cubeMesh.Front.C, cubeMesh.Left.A, cubeMesh.Left.C);
         }
 
-        private static bool HasNoNeighbor(in Neighbor<Square> neighbor, in int value) => (neighbor.value & value) == 0;
+        private static bool HasNoNeighbor(in int center, in int other) => (center & other) == 0;
 
         private static void DrawFace(ref int vertexIndex, ref int triangleIndex, int[] triangles, MeshVertexPool meshVertexPool, MeshSquare meshSquare, in int value, in int centerValue, in Side side, in CrossNeighbors<Neighbor<Square>> neighbors)
         {
             switch (side)
             {
                 case Side.LEFT:
-                    if (HasNoNeighbor(neighbors.left, centerValue) == false)
+                    if (
+                        neighbors.left.value > 0 &&
+                        (HasNoNeighbor(centerValue, neighbors.left.value) == false
+                         || HasNoNeighbor(centerValue, ~neighbors.left.value) == false)
+                        )
                         return;
                     break;
                 case Side.TOP:
-                    if (HasNoNeighbor(neighbors.top, centerValue) == false)
+                    if (
+                        neighbors.top.value > 0 &&
+                        (HasNoNeighbor(centerValue & 0b1100, (neighbors.top.value & 0b0011) << 2) == false
+                        || HasNoNeighbor(centerValue & 0b1100, (~neighbors.top.value & 0b0011) << 2) == false)
+                        )
                         return;
                     break;
                 case Side.RIGHT:
-                    if (HasNoNeighbor(neighbors.right, centerValue) == false)
+                    if (
+                        neighbors.right.value > 0 &&
+                        (HasNoNeighbor(centerValue, neighbors.right.value) == false
+                        || HasNoNeighbor(centerValue, ~neighbors.right.value) == false)
+                        )
                         return;
                     break;
                 case Side.BOTTOM:
-                    if (HasNoNeighbor(neighbors.bottom, centerValue) == false)
+                    if (
+                        neighbors.bottom.value > 0 &&
+                        (HasNoNeighbor(centerValue & 0b0011, (neighbors.bottom.value & 0b1100) >> 2) == false
+                        || HasNoNeighbor(centerValue & 0b0011, (~neighbors.bottom.value & 0b1100) >> 2) == false)
+                    )
                         return;
                     break;
             }
