@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MarchingSquare
 {
-    public struct MeshCube
+    public readonly struct MeshCube
     {
         public static int AmountOfFaces = 5;
         private readonly float offset;

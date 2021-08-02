@@ -334,18 +334,5 @@ namespace MarchingSquare
         {
             MarchingSquareMeshHelper.DrawFace(ref vertexIndex, ref triangleIndex, triangles, meshVertexPool, meshSquare, in gridValue);
         }
-        private int GetAmountOfEdges(SquareVertex squareVertex, GridSquare grid)
-        {
-            var neighbors = grid.GetNeighbors(squareVertex);
-            var edges = 0;
-            for (int i = 0; i < neighbors.Count; i++)
-            {
-                if (neighbors[i].value == 0)
-                    edges++;
-            }
-
-            return edges;
-        }
-
     }
 }

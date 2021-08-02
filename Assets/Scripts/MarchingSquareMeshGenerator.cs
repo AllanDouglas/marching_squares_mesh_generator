@@ -38,14 +38,24 @@ namespace MarchingSquare
             }
 
             var mesh = new Mesh();
+            // Vector3[] vertices = meshVertexPool.GetVertices();
+            var vertexBufferData = meshVertexPool.GetVertexBufferData();
+            mesh.SetVertexBufferParams(vertexBufferData.size, VertexData.Layout);
+            
+            mesh.SetVertexBufferData(
+                data: vertexBufferData.data,
+                dataStart: vertexBufferData.start,
+                meshBufferStart: vertexBufferData.meshDataStart,
+                count: vertexBufferData.size);
 
-            Vector3[] vertices = meshVertexPool.GetVertices();
-
-            mesh.SetVertices(vertices);
+            // mesh.SetVertices(vertices);
             mesh.SetTriangles(triangles, 0);
-            mesh.SetUVs(0, new Vector2[vertices.Length]);
+            
+            // mesh.SetUVs(0, new Vector2[vertices.Length]);
+            // mesh.RecalculateNormals();
 
-            mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
 
             return mesh;
         }
