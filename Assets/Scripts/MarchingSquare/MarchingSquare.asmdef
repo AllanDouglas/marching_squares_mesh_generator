@@ -1,0 +1,16 @@
+{
+    "name": "MarchingSquare",
+    "rootNamespace": "MarchingSquare",
+    "references": [
+        "GUID:bf88709d9eb612644a8b1cb6013cd026"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
